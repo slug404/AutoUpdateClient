@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/images/AutoUpdate/ico.png</file>
+        <file>resource/images/AutoUpdate/upgrader_background.png</file>
+    </qresource>
+</RCC>

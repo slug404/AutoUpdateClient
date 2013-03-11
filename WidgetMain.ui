@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WidgetMain</class>
+ <widget class="QWidget" name="WidgetMain">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>414</width>
+    <height>388</height>
+   </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>414</width>
+    <height>388</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>WidgetMain</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#WidgetMain
+{
+border-image: url(:/resource/images/AutoUpdate/upgrader_background.png);
+}</string>
+  </property>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>68</x>
+     <y>288</y>
+     <width>314</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="value">
+    <number>24</number>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>372</x>
+     <y>10</y>
+     <width>31</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton
+{
+font: 75 11pt &quot;Microsoft YaHei UI&quot;;
+background-color: rgba(255, 255, 255, 0);
+color: rgb(255, 255, 255);
+}
+QPushButton:hover
+{
+font: 75 11pt &quot;Microsoft YaHei UI&quot;;
+background-color: rgba(255, 255, 255, 0);
+color: rgb(234, 128, 91);
+}</string>
+   </property>
+   <property name="text">
+    <string>X</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
