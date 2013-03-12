@@ -16,7 +16,7 @@ public:
     VersionCreater();
     virtual ~VersionCreater();
     QString getXml();
-    QMap<QString, QString> getFilePath() { return map_name_path_; }
+    //QMap<QString, QString> getFilePath() { return map_name_path_; }
 
 protected:
     VersionCreater(VersionCreaterPrivate &data);
@@ -28,7 +28,7 @@ protected:
     bool isLocalIp(QHostAddress addr);
 
 private:
-    QMap<QString, QString> map_name_path_;
+    //QMap<QString, QString> map_name_path_;
 };
 
 #endif // VERSIONCREATER_H

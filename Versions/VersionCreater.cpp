@@ -71,7 +71,7 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         foreach (QString fileName, dir.entryList())
         {
             QString path = str + dir.separator() + fileName;
-            map_name_path_[fileName] = path;
+            //map_name_path_[fileName] = path;
             QFile file(path);
             if(!file.open(QFile::ReadOnly))
             {
