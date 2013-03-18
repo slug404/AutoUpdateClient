@@ -175,7 +175,8 @@ void WidgetMain::slotReadyRead()
     {
         //this->move(-9999,  -9999);
         this->hide();
-
+        qDebug() << "Mind+ close";
+        ::Sleep(100);
         moveTempFileToWorkPath();
     }
 }
@@ -309,7 +310,6 @@ void WidgetMain::copyFile(const QString &name, const QString &path, QTextStream 
     QString pathWindows = QDir::toNativeSeparators(path);
     qDebug() << pathWindows;
     out << tr("copy /y \"%1\" \"%2\"").arg(name).arg(pathWindows) << endl;
-
 }
 
 void WidgetMain::copyFile(const QString &name, const QString &path)
@@ -333,6 +333,33 @@ void WidgetMain::copyFile(const QString &name, const QString &path)
             qDebug() << "delete fail: " << name;
         }
     }
+
+    ////////////////////////////////
+    //在这里要确保path可用
+    {
+        QDir pathTest("./");
+        QString oldPath = pathTest.currentPath();
+        if(path.count("/") > 1)
+        {
+            qDebug() << "count / ："<< path.count("/");
+            QString pathTmp = path.left(path.size() - path.lastIndexOf("/") - 1);
+            pathTest.setPath(pathTmp);
+            if(!pathTest.exists())
+            {
+                qDebug() << "not exists the path, and it will try to cerate it:" << pathTmp;
+                if(!pathTest.mkpath(pathTmp))
+                {
+                    qDebug() << "create path fail!!!!";
+                }
+            }
+            pathTest.setPath(oldPath);
+        }
+        else
+        {
+            qDebug() << "don't need to create path";
+        }
+    }
+    ////////////////////////////////
 
     QFile desFile(path);
     if(!desFile.open(QFile::WriteOnly))
@@ -389,15 +416,15 @@ void WidgetMain::initData()
     strLocalVersionInfo_ = versionCreater.getXml();
     //qDebug() << strLocalVersionInfo_;
 
-//    QFile fileTemp("./hundan.xml");
-//    if(!fileTemp.open(QFile::WriteOnly))
-//    {
-//        //qdebug() << "open fail 1234";
-//    }
+    //    QFile fileTemp("./hundan.xml");
+    //    if(!fileTemp.open(QFile::WriteOnly))
+    //    {
+    //        //qdebug() << "open fail 1234";
+    //    }
 
-//    fileTemp.write(strLocalVersionInfo_.toAscii());
+    //    fileTemp.write(strLocalVersionInfo_.toAscii());
 
-//    qDebug() << "strLocalVersionInfo_ done";
+    //    qDebug() << "strLocalVersionInfo_ done";
     //map_name_path_ = versionCreater.getFilePath();
     /////////////////////////////////////////////////////////////////////////////
 
