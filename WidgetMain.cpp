@@ -416,15 +416,15 @@ void WidgetMain::initData()
     strLocalVersionInfo_ = versionCreater.getXml();
     //qDebug() << strLocalVersionInfo_;
 
-    //    QFile fileTemp("./hundan.xml");
-    //    if(!fileTemp.open(QFile::WriteOnly))
-    //    {
-    //        //qdebug() << "open fail 1234";
-    //    }
+    QFile fileTemp("./hundan.xml");
+    if(!fileTemp.open(QFile::WriteOnly))
+    {
+        //qdebug() << "open fail 1234";
+    }
 
-    //    fileTemp.write(strLocalVersionInfo_.toAscii());
+    fileTemp.write(strLocalVersionInfo_.toAscii());
 
-    //    qDebug() << "strLocalVersionInfo_ done";
+    qDebug() << "strLocalVersionInfo_ done";
     //map_name_path_ = versionCreater.getFilePath();
     /////////////////////////////////////////////////////////////////////////////
 

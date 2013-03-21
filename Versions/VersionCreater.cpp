@@ -55,9 +55,9 @@ void VersionCreater::initDomTree()
     d.pIpAddressNode_->appendChild(ipText);
     //qDebug()<< "ip address: " <<getLocalIpAddress();
 
-//    qDebug() << d.pUpdateNode_->nodeName();
-//    qDebug() << d.pFilesNode_->nodeName();
-//    qDebug() << d.pIpAddressNode_->nodeName();
+    //    qDebug() << d.pUpdateNode_->nodeName();
+    //    qDebug() << d.pFilesNode_->nodeName();
+    //    qDebug() << d.pIpAddressNode_->nodeName();
 }
 
 void VersionCreater::traveDomTree(const QString &str, const QStringList &filterFolderPaths)
@@ -79,45 +79,38 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
                 continue;
             }
             DPTR_D(VersionCreater);
-            //QDomNode fileNameNode = d.pDocument_->createElement(fileName.left(fileName.indexOf(".")));
-            //Mind+这个名字在xml里面有问题, 特殊情况特殊处理
-            if("Mind+.exe" == fileName)
-            {
-                fileName = "Mind.exe";
-            }
-            else if("libstdc++-6.dll" == fileName)
-            {
-                continue;
-            }
-            else if("libgcc_s_dw2-1.dll" == fileName)
-            {
-                continue;
-            }
-            else if("MindUpgrader.exe" == fileName)
+
+            if("MindUpgrader.exe" == fileName)
             {
                 continue;
             }
 
-            QDomNode fileNameNode = d.pDocument_->createElement(fileName.replace(".", "__"));
-            d.pFilesNode_->appendChild(fileNameNode);
+            QDomNode filesNode = d.pDocument_->createElement("file");
+            d.pFilesNode_->appendChild(filesNode);
+
+            //<name></name>
+            QDomNode fileNameNode = d.pDocument_->createElement("name");
+            QDomText fileNameText = d.pDocument_->createTextNode(fileName);
+            fileNameNode.appendChild(fileNameText);
+            filesNode.appendChild(fileNameNode);
 
             //<path></path>
             QDomNode filePathNode = d.pDocument_->createElement("path");
-            QDomText filePathText = d.pDocument_->createTextNode(path);
+            QDomText filePathText = d.pDocument_->createTextNode(QDir::toNativeSeparators(path));
             filePathNode.appendChild(filePathText);
-            fileNameNode.appendChild(filePathNode);
+            filesNode.appendChild(filePathNode);
 
             //<md5></md5>
             QDomNode fileMD5Node = d.pDocument_->createElement("md5");
             QDomText fileMD5Text = d.pDocument_->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
             fileMD5Node.appendChild(fileMD5Text);
-            fileNameNode.appendChild(fileMD5Node);
+            filesNode.appendChild(fileMD5Node);
 
             //<lastModify></lastModify>
             QDomNode fileLastModifyNode = d.pDocument_->createElement("lastModify");
             QDomText fileLastModifyText = d.pDocument_->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
             fileLastModifyNode.appendChild(fileLastModifyText);
-            fileNameNode.appendChild(fileLastModifyNode);
+            filesNode.appendChild(fileLastModifyNode);
         }
     }
 
@@ -133,35 +126,7 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         foreach (QString dirName, dir.entryList())
         {
             QString path = str + dir.separator() + dirName;
-
-            bool bFilter = false;
-            //            foreach (QString tmp, filterFolderPaths)
-            //            {
-            //                if(path.contains(tmp))
-            //                {
-            //                    bFilter = true;
-            //                    break;
-            //                }
-            //            }
-            if("tools" == dirName)
-            {
-                bFilter = true;
-            }
-            else if("drivers" == dirName)
-            {
-                bFilter = true;
-            }
-
-
-            if(bFilter)
-            {
-                qDebug() << "filter:" << path;
-            }
-            else
-            {
-                traveDomTree(path, filterFolderPaths);
-            }
-
+            traveDomTree(path, filterFolderPaths);
         }
     }
 }
@@ -222,10 +187,10 @@ QString VersionCreater::getHostIp()
 }
 
 /*!
- * \brief 判断是否是本地链接寻址(Autoip)
- * \param addr ip地址
- * \return bool
- */
+                                                                                                                                                                                  * \brief 判断是否是本地链接寻址(Autoip)
+                                                                                                                                                                                  * \param addr ip地址
+                                                                                                                                                                                  * \return bool
+                                                                                                                                                                                  */
 bool VersionCreater::isLinkLocalAddress(QHostAddress addr)
 {
     quint32 hostIpv4Addr = addr.toIPv4Address();
@@ -242,10 +207,10 @@ bool VersionCreater::isLinkLocalAddress(QHostAddress addr)
 }
 
 /*!
- * \brief 判断是否是私有地址
- * \param addr 地址
- * \return bool
- */
+                                                                                                                                                                                  * \brief 判断是否是私有地址
+                                                                                                                                                                                  * \param addr 地址
+                                                                                                                                                                                  * \return bool
+                                                                                                                                                                                  */
 bool VersionCreater::isLocalIp(QHostAddress addr)
 {
     quint32 hostIpv4Addr = addr.toIPv4Address();

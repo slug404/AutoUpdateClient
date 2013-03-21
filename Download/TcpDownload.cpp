@@ -137,14 +137,7 @@ void TcpDownload::handleData(QDataStream &in)
         QString name;
         QByteArray bytes;
         in >> name >> bytes;
-        //qDebug() << name;
 
-        name = name.replace("__", ".");
-
-        if("Mind.exe" == name)
-        {
-            name = "Mind+.exe";
-        }
         QString filePath = tr("./DownloadTemp/%1").arg(name);
         if(QFile::exists(filePath))
         {
