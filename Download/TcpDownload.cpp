@@ -159,7 +159,7 @@ void TcpDownload::handleData(QDataStream &in)
     QMap<QString, QString> map_name_file;
     serializeIn >> map_name_file;
     map_name_file_ = map_name_file;
-    qDebug() << map_name_file_;
+    //qDebug() << map_name_file_;
 
     DPTR_D(TcpDownload);
     d.pTcpSocket_->close();

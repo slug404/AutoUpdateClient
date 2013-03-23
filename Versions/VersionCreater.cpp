@@ -187,10 +187,10 @@ QString VersionCreater::getHostIp()
 }
 
 /*!
-                                                                                                                                                                                  * \brief 判断是否是本地链接寻址(Autoip)
-                                                                                                                                                                                  * \param addr ip地址
-                                                                                                                                                                                  * \return bool
-                                                                                                                                                                                  */
+* \brief 判断是否是本地链接寻址(Autoip)
+* \param addr ip地址
+* \return bool
+*/
 bool VersionCreater::isLinkLocalAddress(QHostAddress addr)
 {
     quint32 hostIpv4Addr = addr.toIPv4Address();
@@ -207,10 +207,10 @@ bool VersionCreater::isLinkLocalAddress(QHostAddress addr)
 }
 
 /*!
-                                                                                                                                                                                  * \brief 判断是否是私有地址
-                                                                                                                                                                                  * \param addr 地址
-                                                                                                                                                                                  * \return bool
-                                                                                                                                                                                  */
+* \brief 判断是否是私有地址
+* \param addr 地址
+* \return bool
+*/
 bool VersionCreater::isLocalIp(QHostAddress addr)
 {
     quint32 hostIpv4Addr = addr.toIPv4Address();

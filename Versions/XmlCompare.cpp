@@ -100,12 +100,12 @@ QList<UpdateFileInformation> XmlCompare::getUpdateFileList(const QString &client
 
     for(int i = 0; i != nodeList.size(); ++i)
     {
-        QString name = nodeList.at(i).nodeName();
+        QString name = nodeList.at(i).firstChildElement("name").firstChild().toText().nodeValue();
         QString path = nodeList.at(i).firstChildElement("path").firstChild().toText().nodeValue();
         QString md5 = nodeList.at(i).firstChildElement("md5").firstChild().toText().nodeValue();
-        qDebug() << "name: " << name;
-        qDebug() << "path : " << path;
-        qDebug() << "md5 : " << md5;
+//        qDebug() << "name: " << name;
+//        qDebug() << "path : " << path;
+//        qDebug() << "md5 : " << md5;
 
         UpdateFileInformation fileInfor;
         fileInfor.name = name;
@@ -132,7 +132,7 @@ void XmlCompare::compare()
         for(int j = 0; j != clientNodes.size(); ++j)
         {
             QDomNode c =  clientNodes.at(j);
-            if(s.nodeName() == c.nodeName())
+            if(getNodeValue(s, tr("name")).nodeValue() == getNodeValue(c, tr("name")).nodeValue())
             {
                 //比较MD5 和 lastModify
                 //qDebug() << getNodeValue(s, tr("md5")).nodeValue() << getNodeValue(c, tr("md5")).nodeValue();
