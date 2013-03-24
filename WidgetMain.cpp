@@ -107,10 +107,21 @@ void WidgetMain::slotDownloadFinish(const QString &name)
 void WidgetMain::slotServerInfoDone(const QString &str)
 {
     strServerVersionInfo_ = str;
-    //UpdateCompare
-    qDebug() << strServerVersionInfo_;
+
+    /////////////////////////////////////////////////
+    /// \brief 发布时注释
+    ////
+    QFile file("server.xml");
+    if(!file.open(QFile::WriteOnly))
+    {
+        qDebug() << "server.xml can't open! ";
+    }
+    file.write(strServerVersionInfo_.toUtf8());
+    file.waitForBytesWritten(1000);
+    file.close();
+    /////////////////////////////////////////////////////
+
     XmlCompare compare;
-    //connect(&compare, SIGNAL(signalCloseParent()), this, SLOT(close()));
     QList<UpdateFileInformation> listFileInfo = compare.getUpdateFileList(strLocalVersionInfo_, strServerVersionInfo_);
 
     qDebug() << "listFileInfo size is ::::::::::::::::" << listFileInfo.size();
@@ -325,14 +336,14 @@ void WidgetMain::copyFile(const QString &name, const QString &path)
     QByteArray bytes =  file.readAll();
     file.close();
 
-    if(QFile::exists(tr("./DownloadTemp") + "/" + name))
-    {
-        qDebug() << "if exite it will be delete";
-        if(!QFile::remove(tr("./DownloadTemp") + "/" + name))
-        {
-            qDebug() << "delete fail: " << name;
-        }
-    }
+//    if(QFile::exists(tr("./DownloadTemp") + "/" + name))
+//    {
+//        qDebug() << "if exite it will be delete";
+//        if(!QFile::remove(tr("./DownloadTemp") + "/" + name))
+//        {
+//            qDebug() << "delete fail: " << name;
+//        }
+//    }
 
     ////////////////////////////////
     //在这里要确保path可用
@@ -408,22 +419,18 @@ void WidgetMain::initData()
     QDir dirtmp("./");
 
     VersionCreater versionCreater;
-    QStringList list;
-    list << +"/resource/tools";
-    qDebug() << list;
-
-    versionCreater.start(dirtmp.currentPath(), list);
+    versionCreater.start(dirtmp.currentPath());
     strLocalVersionInfo_ = versionCreater.getXml();
     //qDebug() << strLocalVersionInfo_;
 
-    QFile fileTemp("./hundan.xml");
+    QFile fileTemp("./client.xml");
     if(!fileTemp.open(QFile::WriteOnly))
     {
         //qdebug() << "open fail 1234";
     }
 
     fileTemp.write(strLocalVersionInfo_.toAscii());
-
+    fileTemp.close();
     qDebug() << "strLocalVersionInfo_ done";
     //map_name_path_ = versionCreater.getFilePath();
     /////////////////////////////////////////////////////////////////////////////
