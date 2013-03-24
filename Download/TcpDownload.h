@@ -34,6 +34,7 @@ public:
 
 signals:
     void signalBytesAvailable();
+    //从服务端下载更新所需xml结束
     void signalServerInfoDone(const QString &str);
     void signalDownloadProgress(int progress);
     void signalDownloadStart();

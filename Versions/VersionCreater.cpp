@@ -60,7 +60,7 @@ void VersionCreater::initDomTree()
     //    qDebug() << d.pIpAddressNode_->nodeName();
 }
 
-void VersionCreater::traveDomTree(const QString &str, const QStringList &filterFolderPaths)
+void VersionCreater::traveDomTree(const QString &str)
 {
     //好了明天的工作就是开始遍历数据, 然后生成xml
     //先处理files
@@ -126,7 +126,7 @@ void VersionCreater::traveDomTree(const QString &str, const QStringList &filterF
         foreach (QString dirName, dir.entryList())
         {
             QString path = str + dir.separator() + dirName;
-            traveDomTree(path, filterFolderPaths);
+            traveDomTree(path);
         }
     }
 }

@@ -72,6 +72,18 @@ QList<UpdateFileInformation> XmlCompare::getUpdateFileList(const QString &client
 {
     QString domString = getDifference(clientXml, serverXml);
 
+    //////////////////////////
+    ///发布时删掉
+    {
+        QFile fileTmp("request.xml");
+        if(!fileTmp.open(QFile::WriteOnly))
+        {
+            qDebug() << "request.xml can't open!";
+        }
+        fileTmp.write(domString.toUtf8());
+    }
+    //////////////////////////
+
     /////////////////////////////////////////////////////////////////
     //处理Xml中的有效数据
     QDomDocument *pDoc = new QDomDocument();
@@ -135,7 +147,6 @@ void XmlCompare::compare()
             if(getNodeValue(s, tr("name")).nodeValue() == getNodeValue(c, tr("name")).nodeValue())
             {
                 //比较MD5 和 lastModify
-                //qDebug() << getNodeValue(s, tr("md5")).nodeValue() << getNodeValue(c, tr("md5")).nodeValue();
                 if(getNodeValue(s, tr("md5")).nodeValue() == getNodeValue(c, tr("md5")).nodeValue())
                 {
                     bInClient = true;
@@ -146,8 +157,6 @@ void XmlCompare::compare()
         //这里是更新部分
         if(!bInClient)
         {
-            //qDebug() << "need to update !";
-            //qDebug() << s.nodeName() << s.firstChildElement("md5").firstChild().toText().nodeValue();
             QDomElement updateNode = this->createElement(d.pDocument_, s);
             d.pFilesNode_->appendChild(updateNode);
         }

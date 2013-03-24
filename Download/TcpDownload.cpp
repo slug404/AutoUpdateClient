@@ -106,8 +106,7 @@ void TcpDownload::getUpdateFilesData(QList<UpdateFileInformation> list)
     {
        UpdateFileInformation tmp =  list.at(i);
         out << tmp.name;
-        out << tmp.path;
-        qDebug() << tmp.name << "  "<< tmp.path;
+        qDebug() << tmp.name;
     }
 
     out.device()->seek(0);
@@ -128,6 +127,7 @@ void TcpDownload::handleData(QDataStream &in)
     int num;
     in >> num;
     QDir tmpDir("./");
+    qDebug()<<"need to download file : " << num;
     if(!tmpDir.exists("DownloadTemp"))
     {
         tmpDir.mkdir("DownloadTemp");
@@ -142,7 +142,7 @@ void TcpDownload::handleData(QDataStream &in)
         if(QFile::exists(filePath))
         {
             qDebug() << "delete alrealy exist file";
-            QFile::remove(filePath);
+            //QFile::remove(filePath);
         }
         QFile file(filePath);
         if(!file.open(QFile::WriteOnly))
@@ -151,6 +151,7 @@ void TcpDownload::handleData(QDataStream &in)
         }
 
         file.write(bytes);
+        qDebug() << "download file:" << name;
     }
 
     QByteArray serialize;

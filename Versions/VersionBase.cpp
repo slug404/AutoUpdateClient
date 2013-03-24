@@ -18,12 +18,12 @@ VersionBase::~VersionBase()
 {
 }
 
-bool VersionBase::start(const QString &str, const QStringList &filterFolderPaths)
+bool VersionBase::start(const QString &str)
 {
     initDomTree();
     DPTR_D(VersionBase);
 
-    traveDomTree(str, filterFolderPaths);
+    traveDomTree(str);
 }
 
 bool VersionBase::saveXml(const QString &filePath)

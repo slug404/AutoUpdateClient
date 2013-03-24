@@ -13,14 +13,14 @@ class VersionBase : public QObject
     DPTR_DECLARE_PRIVATE(VersionBase)
 public:
     virtual ~VersionBase();
-    bool start(const QString &str, const QStringList &filterFolderPaths);
+    bool start(const QString &str);
     bool saveXml(const QString &filePath);
 
 protected:
     explicit VersionBase(QObject *parent = 0);
     VersionBase(VersionBasePrivate &data);
     virtual void initDomTree() = 0;
-    virtual void traveDomTree(const QString &str, const QStringList &filterFolderPaths) = 0;
+    virtual void traveDomTree(const QString &str) = 0;
 
     DPTR_DECLARE(VersionBase)
 };
