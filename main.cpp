@@ -1,15 +1,15 @@
 #include "WidgetMain.h"
 #include <QApplication>
 #include <QFileInfo>
-#include "Log4Qt/logger.h"
-#include "Log4Qt/BasicConfigurator"
+//#include "Log4Qt/logger.h"
+//#include "Log4Qt/BasicConfigurator"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     WidgetMain w;
-    Log4Qt::BasicConfigurator::configure();
+    //Log4Qt::BasicConfigurator::configure();
     //Log4Qt::Logger *pLog = Log4Qt::Logger::rootLogger();
 //    pLog->removeAllAppenders();
 
