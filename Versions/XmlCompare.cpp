@@ -74,14 +74,14 @@ QList<UpdateFileInformation> XmlCompare::getUpdateFileList(const QString &client
 
     //////////////////////////
     ///发布时删掉
-    {
-        QFile fileTmp("request.xml");
-        if(!fileTmp.open(QFile::WriteOnly))
-        {
-            qDebug() << "request.xml can't open!";
-        }
-        fileTmp.write(domString.toUtf8());
-    }
+//    {
+//        QFile fileTmp("request.xml");
+//        if(!fileTmp.open(QFile::WriteOnly))
+//        {
+//            qDebug() << "request.xml can't open!";
+//        }
+//        fileTmp.write(domString.toUtf8());
+//    }
     //////////////////////////
 
     /////////////////////////////////////////////////////////////////

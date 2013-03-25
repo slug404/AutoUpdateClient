@@ -7,7 +7,7 @@
 QT       += core gui
 QT += xml
 QT += network
-QT += testlib
+#QT += testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
