@@ -336,39 +336,21 @@ void WidgetMain::copyFile(const QString &name, const QString &path)
     QByteArray bytes =  file.readAll();
     file.close();
 
-//    if(QFile::exists(tr("./DownloadTemp") + "/" + name))
-//    {
-//        qDebug() << "if exite it will be delete";
-//        if(!QFile::remove(tr("./DownloadTemp") + "/" + name))
-//        {
-//            qDebug() << "delete fail: " << name;
-//        }
-//    }
+    if(QFile::exists(tr("./DownloadTemp") + "/" + name))
+    {
+        qDebug() << "if exite it will be delete";
+        if(!QFile::remove(tr("./DownloadTemp") + "/" + name))
+        {
+            qDebug() << "delete fail: " << name;
+        }
+    }
 
     ////////////////////////////////
     //在这里要确保path可用
     {
         QDir pathTest("./");
         QString oldPath = pathTest.currentPath();
-//        if(path.count("/") > 1)
-//        {
-//            qDebug() << "count / ："<< path.count("/");
-//            QString pathTmp = path.left(path.size() - path.lastIndexOf("/") - 1);
-//            pathTest.setPath(pathTmp);
-//            if(!pathTest.exists())
-//            {
-//                qDebug() << "not exists the path, and it will try to cerate it:" << pathTmp;
-//                if(!pathTest.mkpath(pathTmp))
-//                {
-//                    qDebug() << "create path fail!!!!";
-//                }
-//            }
-//            pathTest.setPath(oldPath);
-//        }
-//        else
-//        {
-//            qDebug() << "don't need to create path";
-//        }
+
         pathTest.setPath(path);
         if(!pathTest.exists())
         {
