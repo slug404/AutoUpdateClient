@@ -156,9 +156,8 @@ void WidgetMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
     {
         case QSystemTrayIcon::Trigger:
         case QSystemTrayIcon::DoubleClick:
-            break;
         case QSystemTrayIcon::MiddleClick:
-            showMessage();
+            this->showNormal();
             break;
         default:
             ;
@@ -437,7 +436,7 @@ void WidgetMain::initData()
     //通知栏
     createActions();
     createTrayIcon();
-    //connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),     this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+    connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),     this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
     trayIcon->show();
 }
 
