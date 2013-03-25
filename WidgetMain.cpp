@@ -465,13 +465,13 @@ void WidgetMain::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(minimizeAction);
-    trayIconMenu->addAction(maximizeAction);
+    //trayIconMenu->addAction(maximizeAction);
     trayIconMenu->addAction(restoreAction);
     trayIconMenu->addSeparator();
     trayIconMenu->addAction(quitAction);
 
     trayIcon = new QSystemTrayIcon(this);
-    //trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTip(tr("auto update program"));
     trayIcon->setIcon(QIcon(QPixmap("./resource/images/AutoUpdate/ico.png").scaled(QSize(16, 16))));
 }
