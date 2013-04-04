@@ -110,15 +110,17 @@ void WidgetMain::slotServerInfoDone(const QString &str)
 
     /////////////////////////////////////////////////
     /// \brief 发布时注释
-    ////
-//    QFile file("server.xml");
-//    if(!file.open(QFile::WriteOnly))
+//    ////
 //    {
-//        qDebug() << "server.xml can't open! ";
+//        QFile file("server.xml");
+//        if(!file.open(QFile::WriteOnly))
+//        {
+//            qDebug() << "server.xml can't open! ";
+//        }
+//        file.write(strServerVersionInfo_.toUtf8());
+//        file.waitForBytesWritten(1000);
+//        file.close();
 //    }
-//    file.write(strServerVersionInfo_.toUtf8());
-//    file.waitForBytesWritten(1000);
-//    file.close();
     /////////////////////////////////////////////////////
 
     XmlCompare compare;
@@ -414,15 +416,17 @@ void WidgetMain::initData()
     strLocalVersionInfo_ = versionCreater.getXml();
     //qDebug() << strLocalVersionInfo_;
 
-//    QFile fileTemp("./client.xml");
-//    if(!fileTemp.open(QFile::WriteOnly))
 //    {
-//        //qdebug() << "open fail 1234";
-//    }
+//        QFile fileTemp("./client.xml");
+//        if(!fileTemp.open(QFile::WriteOnly))
+//        {
+//            //qdebug() << "open fail 1234";
+//        }
 
-//    fileTemp.write(strLocalVersionInfo_.toAscii());
-//    fileTemp.close();
-//    qDebug() << "strLocalVersionInfo_ done";
+//        fileTemp.write(strLocalVersionInfo_.toAscii());
+//        fileTemp.close();
+//    }
+    //qDebug() << "strLocalVersionInfo_ done";
     //map_name_path_ = versionCreater.getFilePath();
     /////////////////////////////////////////////////////////////////////////////
 
