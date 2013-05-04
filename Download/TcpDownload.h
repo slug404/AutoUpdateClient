@@ -24,7 +24,7 @@ public:
     TcpDownload();
     virtual void prepare();
     virtual void request();
-    virtual void handleData();
+    virtual void handleReadyRead();
     virtual void clear();
     void close();
 

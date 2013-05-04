@@ -19,7 +19,7 @@ protected:
     explicit DownloadBase(DownloadBasePrivate &data);
     virtual void prepare() = 0;
     virtual void request() = 0;
-    virtual void handleData() = 0;
+    virtual void handleReadyRead() = 0;
     virtual void clear() = 0;
 
 protected:

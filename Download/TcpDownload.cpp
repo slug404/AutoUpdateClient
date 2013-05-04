@@ -224,7 +224,7 @@ void TcpDownload::prepare()
 {
     DPTR_D(TcpDownload);
     emit signalDownloadStart();
-
+    qDebug() << "connect to server";
     d.pTcpSocket_->connectToHost("61.152.147.107", 8769);
 }
 
@@ -233,9 +233,9 @@ void TcpDownload::request()
     getXml();
 }
 
-void TcpDownload::handleData()
+void TcpDownload::handleReadyRead()
 {
-    //qDebug() << "start handle tcp datagram";
+    qDebug() << "start handle tcp datagram";
     logger()->debug("logger : tart handle tcp datagram");
     DPTR_D(TcpDownload);
     QDataStream in(d.pTcpSocket_);
@@ -251,7 +251,7 @@ void TcpDownload::handleData()
     }
     qint32 currentSize = d.pTcpSocket_->bytesAvailable();
     emit signalDownloadProgress((currentSize- (qint32)sizeof(qint32))*100 / blockSize_);
-    //qDebug() << (currentSize- (qint32)sizeof(qint32))*100 / blockSize_;
+
     if(currentSize < blockSize_)
     {
         return;
@@ -339,7 +339,7 @@ void TcpDownload::slotError(QAbstractSocket::SocketError error)
 
 void TcpDownload::slotReadyRead()
 {
-    handleData();
+    handleReadyRead();
 }
 
 void TcpDownload::startTest()
