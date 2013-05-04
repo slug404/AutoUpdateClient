@@ -48,6 +48,7 @@ private:
     void createTrayIcon();
     void initLocalNetwork();
     void moveTempFileToWorkPath();
+    void moveTempFileToWorkPath(QMap<QString, QString> &map_name_path);
     void startMind(const QString &path);
 //真应该分成及派生类, Windows一个, Linux一个, Mac一个. 回学校之后再改吧
 

@@ -90,12 +90,25 @@ void WidgetMain::slotDownloadFinish(const QString &name)
 {
     //下载完了做后续处理
     map_name_path_ = pDownload_->getFileNameAndFilePath();
+    {
+        //保存文件路径信息, 下次更新的时候需要
+        QByteArray bytes;
+        QDataStream out(&bytes, QIODevice::WriteOnly);
+        out << map_name_path_;
+        QFile file("./DownloadTemp/filePath.dat");
+        if(!file.open(QFile::WriteOnly))
+        {
+            qDebug() << "open file fail : " << "./DownloadTemp/filePath.dat";
+        }
+        file.write(bytes);
+    }
     qDebug() << "update data download finish";
 
     pDownload_->close();
 
     QSettings setting("./resource/setting.ini", QSettings::IniFormat);
     setting.setValue("Normal/update", true);
+    qApp->exit(4);
 }
 
 void WidgetMain::slotServerInfoDone(const QString &str)
@@ -129,24 +142,6 @@ void WidgetMain::slotServerInfoDone(const QString &str)
     {
         pDownload_->setUpdateFileList(listFileInfo);
     }
-
-
-//    if(QMessageBox::Yes == result)
-//    {
-//        this->show();
-
-//    }
-//    else if(QMessageBox::No == result)
-//    {
-//        pDownload_->close();
-//        progressBar->setValue(0);
-//        this->close();
-//    }
-//    else
-//    {
-//        qDebug() << "error!!!";
-//    }
-    //qApp->exit(4);
 }
 
 void WidgetMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -213,8 +208,6 @@ void WidgetMain::initSetting()
 {
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
-
-    //setWindowFlags(Qt::SubWindow);
 }
 
 #ifdef Q_WS_WIN32
@@ -395,7 +388,26 @@ void WidgetMain::initData()
     {
         //更新文件
         qDebug() << "start to copy update file";
-        moveTempFileToWorkPath();
+        //在这之前需要文件放在哪的信息
+        QMap<QString, QString> map_file_path;
+        {
+            QFile file("./DownloadTemp/filePath.dat");
+            if(!file.open(QFile::ReadOnly))
+            {
+                qDebug() << "open filePath.dat file";
+                qDebug() << file.errorString();
+            }
+            QByteArray bytes = file.readAll();
+            QDataStream in(&bytes, QIODevice::ReadOnly);
+
+            in >> map_file_path;
+            if(map_file_path.isEmpty())
+            {
+                qDebug() << "load filePath.dat error";
+            }
+
+        }
+        moveTempFileToWorkPath(map_file_path);
         setting.setValue("Normal/update", false);
     }
     else
@@ -525,6 +537,29 @@ void WidgetMain::moveTempFileToWorkPath()
         else
         {
             qDebug() << "map_name_path_ not contains " << name;
+        }
+    }
+}
+
+void WidgetMain::moveTempFileToWorkPath(QMap<QString, QString> &map_name_path)
+{
+    qDebug() << "start copy files";
+    QDir dir("./DownloadTemp");
+    dir.setFilter(QDir::Files);
+    QStringList list = dir.entryList();
+
+    for(int i = 0; i != list.size(); ++i)
+    {
+        QString name = list.at(i);
+        if(map_name_path.contains(name))
+        {
+            QString path = map_name_path.value(name);
+            qDebug() << name << path;
+            copyFile(name, path);
+        }
+        else
+        {
+            qDebug() << "map_name_path not contains " << name;
         }
     }
 }
