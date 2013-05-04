@@ -84,6 +84,10 @@ void VersionCreater::traveDomTree(const QString &str)
             {
                 continue;
             }
+            else if("Thumbs.db" == fileName)
+            {
+                continue;
+            }
 
             QDomNode filesNode = d.pDocument_->createElement("file");
             d.pFilesNode_->appendChild(filesNode);
