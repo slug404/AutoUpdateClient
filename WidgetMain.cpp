@@ -15,6 +15,7 @@
 #include <QPainter>
 #include <QThread>
 #include <QApplication>
+#include <QSettings>
 
 #include "Versions/UpdateCompare.h"
 #include "Versions/XmlCompare.h"
@@ -87,21 +88,14 @@ void WidgetMain::mouseMoveEvent(QMouseEvent *event)
 
 void WidgetMain::slotDownloadFinish(const QString &name)
 {
-    //在这里华丽的进行覆盖的操作
-    //比较方便的方式就根据不同的操作系统写不同的脚本, 也可以写递归遍历操作, 麻烦
-    //updateProgram_Windows(name);
-    //this->lower();
+    //下载完了做后续处理
     map_name_path_ = pDownload_->getFileNameAndFilePath();
     qDebug() << "update data download finish";
 
     pDownload_->close();
-    qDebug() << "connect to Mind+";
-    pLocalSocket_->connectToServer("Mind+");
-    if(!pLocalSocket_->waitForConnected())
-    {
-        qDebug() << "Mind+ not respond";
-        moveTempFileToWorkPath();
-    }
+
+    QSettings setting("./resource/setting.ini", QSettings::IniFormat);
+    setting.setValue("Normal/update", true);
 }
 
 void WidgetMain::slotServerInfoDone(const QString &str)
@@ -130,26 +124,29 @@ void WidgetMain::slotServerInfoDone(const QString &str)
     if(listFileInfo.isEmpty())
     {
         qDebug() << "listFileInfo is empty process will be close";
-        qApp->exit(4);
-    }
-
-    int result = QMessageBox::information(this, tr("update informaiton"), tr("Mind+ have new version. \nDo you wanna Upgrade now? ?"), QMessageBox::Yes, QMessageBox::No);
-
-    if(QMessageBox::Yes == result)
-    {
-        this->show();
-        pDownload_->setUpdateFileList(listFileInfo);
-    }
-    else if(QMessageBox::No == result)
-    {
-        pDownload_->close();
-        progressBar->setValue(0);
-        this->close();
     }
     else
     {
-        qDebug() << "error!!!";
+        pDownload_->setUpdateFileList(listFileInfo);
     }
+
+
+//    if(QMessageBox::Yes == result)
+//    {
+//        this->show();
+
+//    }
+//    else if(QMessageBox::No == result)
+//    {
+//        pDownload_->close();
+//        progressBar->setValue(0);
+//        this->close();
+//    }
+//    else
+//    {
+//        qDebug() << "error!!!";
+//    }
+    //qApp->exit(4);
 }
 
 void WidgetMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -392,6 +389,22 @@ void WidgetMain::updateProgram_Mac()
 
 void WidgetMain::initData()
 {
+    QSettings setting("./resource/setting.ini", QSettings::IniFormat);
+    bool bUpdate = setting.value("Normal/update").toBool();
+    if(bUpdate)
+    {
+        //更新文件
+        qDebug() << "start to copy update file";
+        moveTempFileToWorkPath();
+        setting.setValue("Normal/update", false);
+    }
+    else
+    {
+        qDebug() << "don't need to update file, and start Mind+";
+    }
+    startMind("./Mind+.exe");
+    //检查本地版本以及服务器版本.
+
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
     progressBar->setValue(0);
@@ -410,7 +423,7 @@ void WidgetMain::initData()
     /////////////////////////////////////////////////////////////////////////////
     //本地文件的计算
     QDir dirtmp("./");
-
+    qDebug() << "get local files version information";
     VersionCreater versionCreater;
     versionCreater.start(dirtmp.currentPath());
     strLocalVersionInfo_ = versionCreater.getXml();
@@ -495,7 +508,6 @@ void WidgetMain::initLocalNetwork()
 
 void WidgetMain::moveTempFileToWorkPath()
 {
-    //map_name_path_ = pDownload_->getFileNameAndFilePath();
     qDebug() << "start copy files";
     QDir dir("./DownloadTemp");
     dir.setFilter(QDir::Files);
@@ -514,18 +526,6 @@ void WidgetMain::moveTempFileToWorkPath()
         {
             qDebug() << "map_name_path_ not contains " << name;
         }
-    }
-
-    int result = QMessageBox::information(this, tr("information"), tr("The upgrade is complete. \nLaunch Mind+ now?"), QMessageBox::Yes, QMessageBox::No);
-    if(QMessageBox::Yes == result)
-    {
-        startMind("./Mind+.exe");
-
-        this->close();
-    }
-    else if(QMessageBox::No == result)
-    {
-        this->close();
     }
 }
 
