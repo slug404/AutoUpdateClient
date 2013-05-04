@@ -225,6 +225,7 @@ void TcpDownload::prepare()
     DPTR_D(TcpDownload);
     emit signalDownloadStart();
     qDebug() << "connect to server";
+    //d.pTcpSocket_->connectToHost("192.168.0.168", 8769);
     d.pTcpSocket_->connectToHost("61.152.147.107", 8769);
 }
 
