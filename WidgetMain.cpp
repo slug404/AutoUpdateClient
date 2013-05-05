@@ -259,7 +259,13 @@ void WidgetMain::initData()
     {
         qDebug() << "don't need to update file, and start Mind+";
     }
-    startMind("./Mind+.exe");
+#ifdef Q_OS_WIN32
+	startMind("./Mind+.exe");
+#elif defined(Q_OS_LINUX)
+	startMind("./Mind+");
+#elif defined(Q_OS_MAC)
+	startMind("./Mind+.app");
+#endif
     //检查本地版本以及服务器版本.
 
     progressBar->setMinimum(0);
@@ -397,12 +403,16 @@ void WidgetMain::moveTempFileToWorkPath(QMap<QString, QString> &map_name_path)
 
 void WidgetMain::startMind(const QString &path)
 {
-    if(!QFile::exists(path))
+#ifdef Q_OS_MAC
+	if(!QFile::exists(path))
+#else
+	if(!QFile::exists(path))
+#endif
     {
-        int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find Mind+.exe in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
+		int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find Mind+ in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
         if(QMessageBox::Yes == result)
         {
-            QString pathNow = QFileDialog::getExistingDirectory(this, tr(""), tr("."));
+			QString pathNow = QFileDialog::getOpenFileName(this, tr(""), tr("."));
             startMind(pathNow);
         }
         else
@@ -412,12 +422,11 @@ void WidgetMain::startMind(const QString &path)
     }
     //另外一个线程中去阻塞调用
     QThread *pThread = new QThread(this);
-    CallMindPlus *pCallMindPlus = new CallMindPlus(path);
+	CallMindPlus *pCallMindPlus = new CallMindPlus(path);
     connect(pThread, SIGNAL(started()), pCallMindPlus, SLOT(slotCallMindPlus()));
     pCallMindPlus->moveToThread(pThread);
 
     pThread->start();
-    ::Sleep(500);
 }
 
 void WidgetMain::on_pushButton_clicked()
