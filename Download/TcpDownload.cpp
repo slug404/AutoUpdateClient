@@ -27,7 +27,7 @@ void TcpDownload::handleXml(QDataStream &in)
 {
     QString buffer;
     in >> buffer;
-    //logger()->debug(buffer);
+	//qDebug() << (buffer);
 
 //    QFile file("requestXml.xml");
 //    if(!file.open(QFile::WriteOnly))
@@ -75,9 +75,8 @@ void TcpDownload::getData()
     out << (qint32)RequestData;
     if(d.requestXml_.isEmpty())
     {
-        logger()->debug("requestXml_ is empty");
+		qDebug() << ("requestXml_ is empty");
     }
-    //out << d.requestXml_;
 
     out.device()->seek(0);
     out << (qint32)(bytes.size() - (qint32)sizeof(qint32));
@@ -190,18 +189,18 @@ void TcpDownload::handleExecutable(QDataStream &in)
 {
     QString name;
     in >> name;
-    logger()->debug(QString("name: %1").arg(name));
+	qDebug() << (QString("name: %1").arg(name));
     QByteArray bytes;
     in >> bytes;
-    logger()->debug(tr("size of bytes :") + QString::number(bytes.size()));
+	qDebug() << (tr("size of bytes :") + QString::number(bytes.size()));
     QByteArray md5;
     in >> md5;
-    logger()->debug(QString(md5));
+	qDebug() << (QString(md5));
     QByteArray tmp = QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
-    logger()->debug(QString(tmp));
+	qDebug() << (QString(tmp));
     if(md5 != tmp)
     {
-        logger()->debug("data error!");
+		qDebug() << ("data error!");
     }
 
     QDir tmpDir("./");
@@ -212,7 +211,7 @@ void TcpDownload::handleExecutable(QDataStream &in)
     QFile file(tr("./DownloadTemp/%1").arg(name));
     if(!file.open(QFile::WriteOnly))
     {
-        logger()->debug(tr("can't open file ") + name);
+		qDebug() << (tr("can't open file ") + name);
     }
     file.write(bytes);
     file.close();
@@ -237,7 +236,7 @@ void TcpDownload::request()
 void TcpDownload::handleReadyRead()
 {
     qDebug() << "start handle tcp datagram";
-    logger()->debug("logger : tart handle tcp datagram");
+	qDebug() << ("logger : tart handle tcp datagram");
     DPTR_D(TcpDownload);
     QDataStream in(d.pTcpSocket_);
     in.setVersion(QDataStream::Qt_4_8);

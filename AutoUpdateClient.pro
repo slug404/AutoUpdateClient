@@ -16,7 +16,7 @@ TEMPLATE = app
 greaterThan(QT_MAJOR_VERSION, 4): CONFIG += QMAKE_CXXFLAGS += -std=c++0x
 equals(QT_MAJOR_VERSION, 5): CONFIG += c++11
 
-LIBS += -llibLog4Qt
+#LIBS += -llibLog4Qt
 
 SOURCES += main.cpp\
 		WidgetMain.cpp\

@@ -4,7 +4,6 @@
 #include "DownloadBase.h"
 #include <QTcpSocket>
 #include "dptr.h"
-#include "Log4Qt/Logger"
 #include "Versions/XmlCompare.h"
 
 class TcpDownloadPrivate;
@@ -12,7 +11,6 @@ class TcpDownloadPrivate;
 class TcpDownload : public DownloadBase
 {
     Q_OBJECT
-    LOG4QT_DECLARE_QCLASS_LOGGER
 public:
     enum RequestType
     {

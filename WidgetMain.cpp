@@ -27,15 +27,11 @@ WidgetMain::WidgetMain(QWidget *parent)
     : QWidget(parent)
     , strLocalVersionInfo_("")
     , strServerVersionInfo_("")
-    , pLocalServer_(NULL)
-    , pLocalSocket_(NULL)
-    , cmd_("")
-    , updateType_(-1)
 {
     setupUi(this);
     initSetting();
     initData();
-    initLocalNetwork();
+
     QTimer::singleShot(1, this, SLOT(slotHideWindows()));
 }
 
@@ -54,6 +50,7 @@ void WidgetMain::changeEvent(QEvent *e)
 
 void WidgetMain::paintEvent(QPaintEvent *event)
 {
+	Q_UNUSED(event);
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
@@ -158,41 +155,6 @@ void WidgetMain::iconActivated(QSystemTrayIcon::ActivationReason reason)
     }
 }
 
-void WidgetMain::slotNewConnection()
-{
-    qDebug() << "have new connection";
-    QLocalSocket *pLocalSocket = pLocalServer_->nextPendingConnection();
-    connect(pLocalSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
-}
-
-/*!
- * \brief 根据Mind+那端发来的数据进行判断, 到底要不要更新
- */
-void WidgetMain::slotReadyRead()
-{
-    qDebug() << "have local socket data";
-    QLocalSocket *pLocalSocket = qobject_cast<QLocalSocket *>(sender());
-    QByteArray tmp =  pLocalSocket->readAll();
-    //Mind+那边可以选择的操作有立即更新, 下次更新(关闭时更新似乎更好)
-    qDebug() << tmp;
-    if(QString("Mind+ close") == QString(tmp))
-    {
-        //this->move(-9999,  -9999);
-        this->hide();
-        qDebug() << "Mind+ close";
-        ::Sleep(100);
-        moveTempFileToWorkPath();
-    }
-}
-
-void WidgetMain::slotConnected()
-{
-    qDebug() << "send update message to Mind+ (update program now)";
-    QByteArray bytes;
-    bytes.append("update program now");
-    pLocalSocket_->write(bytes);
-}
-
 void WidgetMain::slotHideWindows()
 {
     hide();
@@ -208,110 +170,6 @@ void WidgetMain::initSetting()
 {
     setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground);
-}
-
-#ifdef Q_WS_WIN32
-void WidgetMain::updateProgram_Windows(const QString &name)
-{
-    //先杀死当前进程
-    int result = QMessageBox::warning(this, tr("warning"), tr("Are you sure to update the program?"), QMessageBox::Ok, QMessageBox::Cancel);
-    if(QMessageBox::Ok == result)
-    {
-        QString name = "Mind+";
-        killProcess_Windows(NULL, name.toLatin1().constData());
-    }
-    else if(QMessageBox::Cancel == result)
-    {
-        logger()->debug("chose cancel!!");
-        return;
-    }
-    else
-    {
-        logger()->debug("chose error!!");
-        return;
-    }
-}
-
-/*!
- * \brief 关闭某个程序
- * \param pClassName 要关闭的程序的类名
- * \param pTitleName 要关闭的程序的标题名 (前提是要有窗口和标题)
- * \return
- */
-int WidgetMain::killProcess_Windows(const char* pClassName, const char* pTitleName)
-{
-    HANDLE hProcessHandle;
-    ULONG nProcessID;
-    HWND TheWindow;
-
-    TheWindow = ::FindWindowA( pClassName, pTitleName );
-
-    ::GetWindowThreadProcessId( TheWindow, &nProcessID );
-
-    hProcessHandle = ::OpenProcess( PROCESS_TERMINATE, FALSE, nProcessID );
-
-    ::TerminateProcess( hProcessHandle, 4 );
-    //::WaitForSingleObject(hProcessHandle, 1000);    //强制等待
-    ::Sleep(200);
-
-    qDebug() << "Mind+ already close";
-}
-
-void WidgetMain::overlayFile(const QString &path)
-{
-    //合法性检查
-    logger()->debug("start overlay file...");
-    QDir dir("./");
-    if(!dir.exists("DownloadTemp"))
-    {
-        logger()->debug("Can't find DownloadTemp directory");
-        return;
-    }
-    dir.cd("DownloadTemp");
-    if(!QFile::exists("./DownloadTemp/Mind+.exe"))
-    {
-        logger()->debug("can't find Mind+.exe");
-        return;
-    }
-
-    //生成脚本命令
-    QFile file("./Copy.bat");
-    if(!file.open(QFile::WriteOnly | QFile::Text))
-    {
-        logger()->debug("can't open file Copy.bat");
-        file.close();
-        return ;
-    }
-
-    QTextStream out(&file);
-    out << tr("cd DownloadTemp").arg(path) << endl;
-    out << tr("copy /y \"Mind+.exe\" \"%1\"").arg(path) << endl;
-    file.close();
-
-    //在这里调用命令
-    QProcess::execute("./Copy.bat");    //执行成功
-
-    //后续清理
-    if(QFile::exists("Copy.bat"))
-    {
-        if(!QFile::remove("Copy.bat"))
-        {
-            logger()->debug("remove copy.bat fail");
-        }
-    }
-}
-
-/*!
- * \brief 把名为name的文件copy到path路径下
- * \param name 文件名
- * \param path 路径
- */
-void WidgetMain::copyFile(const QString &name, const QString &path, QTextStream &out)
-{
-    //生成脚本命令
-    QString pathWindows = QDir::toNativeSeparators(path);
-    qDebug() << pathWindows;
-    out << tr("copy /y \"%1\" \"%2\"").arg(name).arg(pathWindows) << endl;
 }
 
 void WidgetMain::copyFile(const QString &name, const QString &path)
@@ -366,19 +224,6 @@ void WidgetMain::copyFile(const QString &name, const QString &path)
     desFile.waitForBytesWritten(10);
     desFile.close();
 }
-
-#elif defined(Q_OS_LINUX)
-void WidgetMain::updateProgram_Linux()
-{
-}
-int WidgetMain::killProcess_Windows()
-{
-}
-#elif defined(Q_OS_MAC)
-void WidgetMain::updateProgram_Mac()
-{
-}
-#endif
 
 void WidgetMain::initData()
 {
@@ -502,20 +347,6 @@ void WidgetMain::createTrayIcon()
     trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTip(tr("auto update program"));
     trayIcon->setIcon(QIcon(QPixmap("./resource/images/AutoUpdate/ico.png").scaled(QSize(16, 16))));
-}
-
-void WidgetMain::initLocalNetwork()
-{
-    pLocalSocket_ = new QLocalSocket(this);
-    connect(pLocalSocket_, SIGNAL(connected()), this, SLOT(slotConnected()));
-
-    pLocalServer_ = new QLocalServer(this);
-    if(!pLocalServer_->listen("AutoUpdate"))
-    {
-        qDebug() << pLocalServer_->errorString();
-        return;
-    }
-    connect(pLocalServer_, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
 }
 
 void WidgetMain::moveTempFileToWorkPath()
