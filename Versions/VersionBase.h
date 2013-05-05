@@ -13,7 +13,7 @@ class VersionBase : public QObject
     DPTR_DECLARE_PRIVATE(VersionBase)
 public:
     virtual ~VersionBase();
-    bool start(const QString &str);
+	void start(const QString &str);
     bool saveXml(const QString &filePath);
 
 protected:

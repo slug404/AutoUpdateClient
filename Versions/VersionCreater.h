@@ -21,7 +21,7 @@ protected:
     VersionCreater(VersionCreaterPrivate &data);
     virtual void initDomTree();
     virtual void traveDomTree(const QString &str);
-    QString & getLocalIpAddress() const;
+	QString getLocalIpAddress() const;
     QString getHostIp();
     bool isLinkLocalAddress(QHostAddress addr);
     bool isLocalIp(QHostAddress addr);

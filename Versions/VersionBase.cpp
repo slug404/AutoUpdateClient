@@ -18,11 +18,9 @@ VersionBase::~VersionBase()
 {
 }
 
-bool VersionBase::start(const QString &str)
+void VersionBase::start(const QString &str)
 {
     initDomTree();
-    DPTR_D(VersionBase);
-
     traveDomTree(str);
 }
 

@@ -134,7 +134,7 @@ void VersionCreater::traveDomTree(const QString &str)
     }
 }
 
-QString &VersionCreater::getLocalIpAddress() const
+QString VersionCreater::getLocalIpAddress() const
 {
     QString ipAddress = "";
 
