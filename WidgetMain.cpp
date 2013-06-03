@@ -50,7 +50,7 @@ void WidgetMain::changeEvent(QEvent *e)
 
 void WidgetMain::paintEvent(QPaintEvent *event)
 {
-	Q_UNUSED(event);
+    Q_UNUSED(event);
     QStyleOption opt;
     opt.init(this);
     QPainter p(this);
@@ -105,7 +105,8 @@ void WidgetMain::slotDownloadFinish(const QString &name)
 
     QSettings setting("./resource/setting.ini", QSettings::IniFormat);
     setting.setValue("Normal/update", true);
-    qApp->exit(4);
+    //qApp->exit(4);
+    this->close();
 }
 
 void WidgetMain::slotServerInfoDone(const QString &str)
@@ -134,6 +135,7 @@ void WidgetMain::slotServerInfoDone(const QString &str)
     if(listFileInfo.isEmpty())
     {
         qDebug() << "listFileInfo is empty process will be close";
+        this->close();
     }
     else
     {
@@ -260,11 +262,11 @@ void WidgetMain::initData()
         qDebug() << "don't need to update file, and start Mind+";
     }
 #ifdef Q_OS_WIN32
-	startMind("./Mind+.exe");
+    startMind("./Mind+.exe");
 #elif defined(Q_OS_LINUX)
-	startMind("./Mind+");
+    startMind("./Mind+");
 #elif defined(Q_OS_MAC)
-	startMind("./Mind+.app");
+    startMind("./Mind+.app");
 #endif
     //检查本地版本以及服务器版本.
 
@@ -404,15 +406,15 @@ void WidgetMain::moveTempFileToWorkPath(QMap<QString, QString> &map_name_path)
 void WidgetMain::startMind(const QString &path)
 {
 #ifdef Q_OS_MAC
-	if(!QFile::exists(path))
+    if(!QFile::exists(path))
 #else
-	if(!QFile::exists(path))
+    if(!QFile::exists(path))
 #endif
     {
-		int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find Mind+ in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
+        int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find Mind+ in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
         if(QMessageBox::Yes == result)
         {
-			QString pathNow = QFileDialog::getOpenFileName(this, tr(""), tr("."));
+            QString pathNow = QFileDialog::getOpenFileName(this, tr(""), tr("."));
             startMind(pathNow);
         }
         else
@@ -422,7 +424,7 @@ void WidgetMain::startMind(const QString &path)
     }
     //另外一个线程中去阻塞调用
     QThread *pThread = new QThread(this);
-	CallMindPlus *pCallMindPlus = new CallMindPlus(path);
+    CallMindPlus *pCallMindPlus = new CallMindPlus(path);
     connect(pThread, SIGNAL(started()), pCallMindPlus, SLOT(slotCallMindPlus()));
     pCallMindPlus->moveToThread(pThread);
 
