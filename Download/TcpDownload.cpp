@@ -230,8 +230,8 @@ void TcpDownload::prepare()
 #elif defined(Q_OS_LINUX)
 	d.pTcpSocket_->connectToHost("61.152.147.107", 8770);
 #elif defined(Q_OS_MAC)
-	//d.pTcpSocket_->connectToHost("61.152.147.107", 8771);
-	d.pTcpSocket_->connectToHost("192.168.0.168", 8771);
+	d.pTcpSocket_->connectToHost("61.152.147.107", 8771);
+	//d.pTcpSocket_->connectToHost("192.168.0.168", 8771);
 #endif
 }
 
