@@ -112,7 +112,7 @@ void WidgetMain::slotDownloadFinish(const QString &name)
 void WidgetMain::slotServerInfoDone(const QString &str)
 {
     strServerVersionInfo_ = str;
-
+    qDebug() << "start scan local files";
     /////////////////////////////////////////////////
     /// \brief 发布时注释
 //    ////

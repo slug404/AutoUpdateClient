@@ -20,14 +20,14 @@ void TcpDownload::initData()
     d.pTcpSocket_ = new QTcpSocket(this);
     connect(d.pTcpSocket_, SIGNAL(connected()), this, SLOT(slotConnected()));
     connect(d.pTcpSocket_, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
-    connect(d.pTcpSocket_, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    connect(d.pTcpSocket_, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::QueuedConnection);
 }
 
 void TcpDownload::handleXml(QDataStream &in)
 {
     QString buffer;
     in >> buffer;
-	//qDebug() << (buffer);
+    //qDebug() << (buffer);
 
 //    QFile file("requestXml.xml");
 //    if(!file.open(QFile::WriteOnly))
@@ -75,7 +75,7 @@ void TcpDownload::getData()
     out << (qint32)RequestData;
     if(d.requestXml_.isEmpty())
     {
-		qDebug() << ("requestXml_ is empty");
+        qDebug() << ("requestXml_ is empty");
     }
 
     out.device()->seek(0);
@@ -189,18 +189,18 @@ void TcpDownload::handleExecutable(QDataStream &in)
 {
     QString name;
     in >> name;
-	qDebug() << (QString("name: %1").arg(name));
+    qDebug() << (QString("name: %1").arg(name));
     QByteArray bytes;
     in >> bytes;
-	qDebug() << (tr("size of bytes :") + QString::number(bytes.size()));
+    qDebug() << (tr("size of bytes :") + QString::number(bytes.size()));
     QByteArray md5;
     in >> md5;
-	qDebug() << (QString(md5));
+    qDebug() << (QString(md5));
     QByteArray tmp = QCryptographicHash::hash(bytes, QCryptographicHash::Md5).toHex();
-	qDebug() << (QString(tmp));
+    qDebug() << (QString(tmp));
     if(md5 != tmp)
     {
-		qDebug() << ("data error!");
+        qDebug() << ("data error!");
     }
 
     QDir tmpDir("./");
@@ -211,7 +211,7 @@ void TcpDownload::handleExecutable(QDataStream &in)
     QFile file(tr("./DownloadTemp/%1").arg(name));
     if(!file.open(QFile::WriteOnly))
     {
-		qDebug() << (tr("can't open file ") + name);
+        qDebug() << (tr("can't open file ") + name);
     }
     file.write(bytes);
     file.close();
@@ -226,12 +226,11 @@ void TcpDownload::prepare()
     qDebug() << "connect to server";
 
 #ifdef Q_OS_WIN32
-	d.pTcpSocket_->connectToHost("61.152.147.107", 8769);
+    d.pTcpSocket_->connectToHost("mindplus.cc", 8769);
 #elif defined(Q_OS_LINUX)
-	d.pTcpSocket_->connectToHost("61.152.147.107", 8770);
+    d.pTcpSocket_->connectToHost("mindplus.cc", 8770);
 #elif defined(Q_OS_MAC)
-	d.pTcpSocket_->connectToHost("61.152.147.107", 8771);
-	//d.pTcpSocket_->connectToHost("192.168.0.168", 8771);
+    d.pTcpSocket_->connectToHost("mindplus.cc", 8771);
 #endif
 }
 
@@ -243,7 +242,7 @@ void TcpDownload::request()
 void TcpDownload::handleReadyRead()
 {
     qDebug() << "start handle tcp datagram";
-	qDebug() << ("logger : tart handle tcp datagram");
+    qDebug() << ("logger : tart handle tcp datagram");
     DPTR_D(TcpDownload);
     QDataStream in(d.pTcpSocket_);
     in.setVersion(QDataStream::Qt_4_8);
@@ -256,7 +255,9 @@ void TcpDownload::handleReadyRead()
         }
         in  >> blockSize_;
     }
+
     qint32 currentSize = d.pTcpSocket_->bytesAvailable();
+    qDebug() << "blockSize_:"  << blockSize_ << "currentSize:" << currentSize;
     emit signalDownloadProgress((currentSize- (qint32)sizeof(qint32))*100 / blockSize_);
 
     if(currentSize < blockSize_)
