@@ -30,7 +30,7 @@ border-image: url(:/resource/images/AutoUpdate/upgrader_background.png);
     <rect>
      <x>68</x>
      <y>288</y>
-     <width>314</width>
+     <width>271</width>
      <height>23</height>
     </rect>
    </property>
