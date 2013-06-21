@@ -262,11 +262,11 @@ void WidgetMain::initData()
         qDebug() << "don't need to update file, and start Mind+";
     }
 #ifdef Q_OS_WIN32
-    startMind("./Mind+.exe");
+	startMind("./mp.exe");
 #elif defined(Q_OS_LINUX)
-    startMind("./Mind+");
+	startMind("./mp");
 #elif defined(Q_OS_MAC)
-    startMind("./Mind+.app");
+	startMind("./mp.app");
 #endif
     //检查本地版本以及服务器版本.
 
@@ -411,7 +411,7 @@ void WidgetMain::startMind(const QString &path)
     if(!QFile::exists(path))
 #endif
     {
-        int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find Mind+ in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
+		int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find mp in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
         if(QMessageBox::Yes == result)
         {
             QString pathNow = QFileDialog::getOpenFileName(this, tr(""), tr("."));

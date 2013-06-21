@@ -6,28 +6,17 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+	QApplication a(argc, argv);
 
-    WidgetMain w;
-    //Log4Qt::BasicConfigurator::configure();
-    //Log4Qt::Logger *pLog = Log4Qt::Logger::rootLogger();
-//    pLog->removeAllAppenders();
+	WidgetMain w;
+#ifdef Q_OS_MAC
+	w.setWindowIcon(QIcon("v095_logo_macx.icns"));//竟然没有用啊
+#elif defined(Q_OS_WIN32)
+	w.setWindowIcon(QIcon("./resource/images/icon/v095_logop_4_48x48x8.png"));//竟然没有用啊
+#endif
 
-//    Log4Qt::FileAppender *pFileAppender = new Log4Qt::FileAppender();
-//    pFileAppender->setName("FileAppender");
-//    pFileAppender->setFile("log.txt");
-//    pFileAppender->activateOptions();
+	w.setWindowTitle("Mind+ Upgrading");
+	w.show();
 
-//    pLog->addAppender(pFileAppender);
-////    Log4Qt::TTCCLayout *pLayout = new Log4Qt::TTCCLayout(Log4Qt::TTCCLayout::DateFormat);
-////    pFileAppender->setLayout(pLayout);
-
-//    pLog->debug("hello slug!");
-//    pLog->info("infor slug!");
-//    pLog->warn("nimei");
-
-    w.setWindowTitle("Mind+ Upgrading");
-    w.show();
-
-    return a.exec();
+	return a.exec();
 }
