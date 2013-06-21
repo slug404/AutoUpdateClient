@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>resource/images/AutoUpdate/ico.png</file>
         <file>resource/images/AutoUpdate/upgrader_background.png</file>
+        <file>v095_logo_macx.icns</file>
+        <file>v095_logo_win32.ico</file>
     </qresource>
 </RCC>

@@ -7,16 +7,17 @@
 QT       += core gui
 QT += xml
 QT += network
-QT += testlib
+
+CONFIG(release, debug|release):DEFINES += USE_RELEASE
+CONFIG(debug, debug|release):DEFINES += USE_DEBUG
+CONFIG(debug, debug|release):QT += testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = MindUpgrader
+TARGET = Mind+
 TEMPLATE = app
 greaterThan(QT_MAJOR_VERSION, 4): CONFIG += QMAKE_CXXFLAGS += -std=c++0x
 equals(QT_MAJOR_VERSION, 5): CONFIG += c++11
-
-#LIBS += -llibLog4Qt
 
 SOURCES += main.cpp\
 		WidgetMain.cpp\
@@ -49,4 +50,6 @@ FORMS    += WidgetMain.ui
 RESOURCES += \
 	src.qrc
 
-#RC_FILE = ico.rc
+win32:RC_FILE = ico.rc
+macx:ICON = v095_logo_macx.icns
+unix:
