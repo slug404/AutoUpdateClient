@@ -10,14 +10,16 @@ QT += network
 
 CONFIG(release, debug|release):DEFINES += USE_RELEASE
 CONFIG(debug, debug|release):DEFINES += USE_DEBUG
-CONFIG(debug, debug|release):QT += testlib
+#CONFIG(debug, debug|release):QT += testlib
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4){
+QT += widgets
+CONFIG += c++11
+}
+greaterThan(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
 
 TARGET = Mind+
 TEMPLATE = app
-greaterThan(QT_MAJOR_VERSION, 4): CONFIG += QMAKE_CXXFLAGS += -std=c++0x
-equals(QT_MAJOR_VERSION, 5): CONFIG += c++11
 
 SOURCES += main.cpp\
 		WidgetMain.cpp\
@@ -52,4 +54,3 @@ RESOURCES += \
 
 win32:RC_FILE = ico.rc
 macx:ICON = v095_logo_macx.icns
-unix:
