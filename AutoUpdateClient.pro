@@ -52,5 +52,22 @@ FORMS    += WidgetMain.ui
 RESOURCES += \
 	src.qrc
 
-win32:RC_FILE = ico.rc
-macx:ICON = v095_logo_macx.icns
+win32{
+MOC_DIR = _moc
+OBJECTS_DIR = _obj
+RCC_DIR = _rcc
+UI_DIR = _ui
+UI_HEADERS_DIR = _ui
+UI_SOURCES_DIR = _ui
+RC_FILE = ico.rc
+}else{
+mac{
+	ICON = v095_logo_macx.icns
+}
+MOC_DIR = .moc
+OBJECTS_DIR = .obj
+RCC_DIR = .rcc
+UI_DIR = .ui
+UI_HEADERS_DIR = .ui
+UI_SOURCES_DIR = .ui
+}
