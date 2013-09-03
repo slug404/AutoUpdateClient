@@ -266,6 +266,7 @@ void WidgetMain::initData()
 #elif defined(Q_OS_LINUX)
 	startMind("./mp");
 #elif defined(Q_OS_MAC)
+	QProcess::execute("chmod +x ./mp.app/Contents/MacOS/mp");
 	startMind("./mp.app");
 #endif
     //检查本地版本以及服务器版本.
