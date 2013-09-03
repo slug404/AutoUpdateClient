@@ -16,7 +16,10 @@ greaterThan(QT_MAJOR_VERSION, 4){
 QT += widgets
 CONFIG += c++11
 }
-greaterThan(QT_MAJOR_VERSION, 4): QMAKE_CXXFLAGS += -std=c++0x
+
+equals(QT_MAJOR_VERSION, 4){
+QMAKE_CXXFLAGS += -std=c++0x
+}
 
 TARGET = Mind+
 TEMPLATE = app
