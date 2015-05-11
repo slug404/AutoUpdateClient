@@ -10,12 +10,12 @@ class TcpDownloadPrivate : public DownloadBasePrivate
 {
 public:
     TcpDownloadPrivate()
-        : pTcpSocket_(NULL)
+        : pTcpSocket(NULL)
     {
     }
 
     //public data here
-    QTcpSocket *pTcpSocket_;
+    QTcpSocket *pTcpSocket;
     //其他的到时候再加
 
 private:

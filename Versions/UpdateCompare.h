@@ -9,7 +9,7 @@ class UpdateComparePrivate;
 class UpdateCompare : public QObject
 {
     Q_OBJECT
-    DPTR_DECLARE_PRIVATE(UpdateCompare);
+    DPTR_DECLARE_PRIVATE(UpdateCompare)
 
 public:
     virtual ~UpdateCompare();
@@ -22,7 +22,7 @@ protected:
     UpdateCompare(QObject *parent = 0);
     explicit UpdateCompare(UpdateComparePrivate &data);
 
-    DPTR_DECLARE(UpdateCompare);
+    DPTR_DECLARE(UpdateCompare)
 };
 
 #endif // UPDATECOMPARE_H

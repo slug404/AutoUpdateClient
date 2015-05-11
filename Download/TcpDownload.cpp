@@ -17,10 +17,10 @@ TcpDownload::TcpDownload()
 void TcpDownload::initData()
 {
     DPTR_D(TcpDownload);
-    d.pTcpSocket_ = new QTcpSocket(this);
-    connect(d.pTcpSocket_, SIGNAL(connected()), this, SLOT(slotConnected()));
-    connect(d.pTcpSocket_, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
-    connect(d.pTcpSocket_, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::QueuedConnection);
+    d.pTcpSocket = new QTcpSocket(this);
+    connect(d.pTcpSocket, SIGNAL(connected()), this, SLOT(slotConnected()));
+    connect(d.pTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(slotError(QAbstractSocket::SocketError)));
+    connect(d.pTcpSocket, SIGNAL(readyRead()), this, SLOT(slotReadyRead()), Qt::QueuedConnection);
 }
 
 void TcpDownload::handleXml(QDataStream &in)
@@ -29,13 +29,13 @@ void TcpDownload::handleXml(QDataStream &in)
     in >> buffer;
     //qDebug() << (buffer);
 
-//    QFile file("requestXml.xml");
-//    if(!file.open(QFile::WriteOnly))
-//    {
-//        qDebug() << "requestXml.xml open fail!";
-//        return;
-//    }
-//    file.write(buffer.toUtf8());
+    //    QFile file("requestXml.xml");
+    //    if(!file.open(QFile::WriteOnly))
+    //    {
+    //        qDebug() << "requestXml.xml open fail!";
+    //        return;
+    //    }
+    //    file.write(buffer.toUtf8());
     emit signalServerInfoDone(buffer);
 }
 
@@ -56,7 +56,7 @@ void TcpDownload::getXml()
 
     out.device()->seek(0);
     out << (qint32)(bytes.size() - (qint32)sizeof(qint32));
-    d.pTcpSocket_->write(bytes.data(), bytes.size());
+    d.pTcpSocket->write(bytes.data(), bytes.size());
 }
 
 /*!
@@ -80,14 +80,14 @@ void TcpDownload::getData()
 
     out.device()->seek(0);
     out << (qint32)(bytes.size() - (qint32)sizeof(qint32));
-    d.pTcpSocket_->write(bytes.data(), bytes.size());
+    d.pTcpSocket->write(bytes.data(), bytes.size());
 }
 
 /*!
  * \brief 向服务端发送请求需要更新的文件列表(为了代替之前的getData, 把计算量尽量做在客户端)
  * \param list 要更新的文件列表, 其中的每一个元素包含一个文件名还有对应的路径
  */
-void TcpDownload::getUpdateFilesData(QList<UpdateFileInformation> list)
+void TcpDownload::getUpdateFilesData(const QList<UpdateFileInformation> &list)
 {
     qDebug() << "start to request update file list";
     QByteArray bytes;
@@ -103,7 +103,7 @@ void TcpDownload::getUpdateFilesData(QList<UpdateFileInformation> list)
 
     for(int i = 0; i != list.size(); ++i)
     {
-       UpdateFileInformation tmp =  list.at(i);
+        UpdateFileInformation tmp =  list.at(i);
         out << tmp.name;
         qDebug() << tmp.name;
     }
@@ -113,7 +113,7 @@ void TcpDownload::getUpdateFilesData(QList<UpdateFileInformation> list)
 
     qDebug() << "bytes size is" << bytes.size();
     DPTR_D(TcpDownload);
-    d.pTcpSocket_->write(bytes.data(), bytes.size());
+    d.pTcpSocket->write(bytes.data(), bytes.size());
 }
 
 /*!
@@ -131,6 +131,7 @@ void TcpDownload::handleData(QDataStream &in)
     {
         tmpDir.mkdir("DownloadTemp");
     }
+
     while (num--)
     {
         QString name;
@@ -143,6 +144,7 @@ void TcpDownload::handleData(QDataStream &in)
             qDebug() << "delete alrealy exist file";
             //QFile::remove(filePath);
         }
+
         QFile file(filePath);
         if(!file.open(QFile::WriteOnly))
         {
@@ -159,10 +161,9 @@ void TcpDownload::handleData(QDataStream &in)
     QMap<QString, QString> map_name_file;
     serializeIn >> map_name_file;
     map_name_file_ = map_name_file;
-    //qDebug() << map_name_file_;
 
     DPTR_D(TcpDownload);
-    d.pTcpSocket_->close();
+    d.pTcpSocket->close();
     emit signalDownloadFinish("");
 }
 
@@ -182,7 +183,7 @@ void TcpDownload::getExecutable()
 
     out.device()->seek(0);
     out << (qint32)(bytes.size() - (qint32)sizeof(qint32));
-    d.pTcpSocket_->write(bytes.data(), bytes.size());
+    d.pTcpSocket->write(bytes.data(), bytes.size());
 }
 
 void TcpDownload::handleExecutable(QDataStream &in)
@@ -226,11 +227,11 @@ void TcpDownload::prepare()
     qDebug() << "connect to server";
 
 #ifdef Q_OS_WIN32
-    d.pTcpSocket_->connectToHost("mindplus.cc", 8769);
+    d.pTcpSocket->connectToHost("mindplus.cc", 8769);
 #elif defined(Q_OS_LINUX)
-    d.pTcpSocket_->connectToHost("mindplus.cc", 8770);
+    d.pTcpSocket->connectToHost("mindplus.cc", 8770);
 #elif defined(Q_OS_MAC)
-    d.pTcpSocket_->connectToHost("mindplus.cc", 8771);
+    d.pTcpSocket->connectToHost("mindplus.cc", 8771);
 #endif
 }
 
@@ -244,19 +245,19 @@ void TcpDownload::handleReadyRead()
     qDebug() << "start handle tcp datagram";
     qDebug() << ("logger : tart handle tcp datagram");
     DPTR_D(TcpDownload);
-    QDataStream in(d.pTcpSocket_);
+    QDataStream in(d.pTcpSocket);
     in.setVersion(QDataStream::Qt_4_8);
 
     if(0 == blockSize_)
     {
-        if(d.pTcpSocket_->bytesAvailable() < (qint32)sizeof(qint32))
+        if(d.pTcpSocket->bytesAvailable() < (qint32)sizeof(qint32))
         {
             return;
         }
         in  >> blockSize_;
     }
 
-    qint32 currentSize = d.pTcpSocket_->bytesAvailable();
+    qint32 currentSize = d.pTcpSocket->bytesAvailable();
     qDebug() << "blockSize_:"  << blockSize_ << "currentSize:" << currentSize;
     emit signalDownloadProgress((currentSize- (qint32)sizeof(qint32))*100 / blockSize_);
 
@@ -270,26 +271,26 @@ void TcpDownload::handleReadyRead()
     emit signalDownloadProgress(100);
     switch (type)
     {
-        case RequestXml:
-        {
-            handleXml(in);
-            break;
-        }
-        case RequestData:
-        {
-            handleData(in);
-            break;
-        }
-        case RequestExecutable:
-        {
-            handleExecutable(in);
-            break;
-        }
-        default:
-        {
-            qDebug() << "error data type";
-            break;
-        }
+    case RequestXml:
+    {
+        handleXml(in);
+        break;
+    }
+    case RequestData:
+    {
+        handleData(in);
+        break;
+    }
+    case RequestExecutable:
+    {
+        handleExecutable(in);
+        break;
+    }
+    default:
+    {
+        qDebug() << "error data type";
+        break;
+    }
     }
 
     blockSize_ = 0;
@@ -298,7 +299,7 @@ void TcpDownload::handleReadyRead()
 void TcpDownload::clear()
 {
     DPTR_D(TcpDownload);
-    d.pTcpSocket_->close();
+    d.pTcpSocket->close();
 }
 /*!
  * \brief 关闭Tcp连接
@@ -306,9 +307,9 @@ void TcpDownload::clear()
 void TcpDownload::close()
 {
     DPTR_D(TcpDownload);
-    if(d.pTcpSocket_)
+    if(d.pTcpSocket)
     {
-        d.pTcpSocket_->close();
+        d.pTcpSocket->close();
     }
 }
 
@@ -341,8 +342,8 @@ void TcpDownload::slotError(QAbstractSocket::SocketError error)
     Q_UNUSED(error);
     qDebug() << "tcp socket error!!";
     DPTR_D(TcpDownload);
-    qDebug() << d.pTcpSocket_->errorString();
-    emit signalTcpError(d.pTcpSocket_->errorString());
+    qDebug() << d.pTcpSocket->errorString();
+    emit signalTcpError(d.pTcpSocket->errorString());
 }
 
 void TcpDownload::slotReadyRead()

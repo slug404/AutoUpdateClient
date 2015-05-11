@@ -24,7 +24,7 @@ VersionCreater::~VersionCreater()
 QString VersionCreater::getXml()
 {
     DPTR_D(VersionCreater);
-    QString str = d.pDocument_->toString();
+    QString str = d.pDocument->toString();
     return str;
 }
 
@@ -36,26 +36,26 @@ VersionCreater::VersionCreater(VersionCreaterPrivate &data)
 void VersionCreater::initDomTree()
 {
     DPTR_D(VersionCreater);
-    d.pDocument_ = new QDomDocument();
-    QDomProcessingInstruction instruction = d.pDocument_->createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
-    d.pDocument_->appendChild(instruction);
-    QDomElement updateElement = d.pDocument_->createElement("update");
-    d.pDocument_->appendChild(updateElement);
+    d.pDocument = new QDomDocument();
+    QDomProcessingInstruction instruction = d.pDocument->createProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
+    d.pDocument->appendChild(instruction);
+    QDomElement updateElement = d.pDocument->createElement("update");
+    d.pDocument->appendChild(updateElement);
 
-    QDomElement fileElement = d.pDocument_->createElement("files");
-    QDomElement ipAddressElement = d.pDocument_->createElement("serverAddress");
+    QDomElement fileElement = d.pDocument->createElement("files");
+    QDomElement ipAddressElement = d.pDocument->createElement("serverAddress");
     updateElement.appendChild(fileElement);
     updateElement.appendChild(ipAddressElement);
 
-    d.pUpdateNode_ = new QDomNode(d.pDocument_->firstChildElement("update"));
-    d.pFilesNode_ = new QDomNode(d.pUpdateNode_->firstChildElement("files"));
-    d.pIpAddressNode_= new QDomNode(d.pUpdateNode_->firstChildElement("serverAddress"));
-    QDomText ipText = d.pDocument_->createTextNode(getHostIp());
-    //QDomText ipText = d.pDocument_->createTextNode(getLocalIpAddress());
+    d.pUpdateNode = new QDomNode(d.pDocument->firstChildElement("update"));
+    d.pFilesNode_ = new QDomNode(d.pUpdateNode->firstChildElement("files"));
+    d.pIpAddressNode_= new QDomNode(d.pUpdateNode->firstChildElement("serverAddress"));
+    QDomText ipText = d.pDocument->createTextNode(getHostIp());
+    //QDomText ipText = d.pDocument->createTextNode(getLocalIpAddress());
     d.pIpAddressNode_->appendChild(ipText);
     //qDebug()<< "ip address: " <<getLocalIpAddress();
 
-    //    qDebug() << d.pUpdateNode_->nodeName();
+    //    qDebug() << d.pUpdateNode->nodeName();
     //    qDebug() << d.pFilesNode_->nodeName();
     //    qDebug() << d.pIpAddressNode_->nodeName();
 }
@@ -88,30 +88,30 @@ void VersionCreater::traveDomTree(const QString &str)
                 continue;
             }
 
-            QDomNode filesNode = d.pDocument_->createElement("file");
+            QDomNode filesNode = d.pDocument->createElement("file");
             d.pFilesNode_->appendChild(filesNode);
 
             //<name></name>
-            QDomNode fileNameNode = d.pDocument_->createElement("name");
-            QDomText fileNameText = d.pDocument_->createTextNode(fileName);
+            QDomNode fileNameNode = d.pDocument->createElement("name");
+            QDomText fileNameText = d.pDocument->createTextNode(fileName);
             fileNameNode.appendChild(fileNameText);
             filesNode.appendChild(fileNameNode);
 
             //<path></path>
-            QDomNode filePathNode = d.pDocument_->createElement("path");
-            QDomText filePathText = d.pDocument_->createTextNode(QDir::toNativeSeparators(path));
+            QDomNode filePathNode = d.pDocument->createElement("path");
+            QDomText filePathText = d.pDocument->createTextNode(QDir::toNativeSeparators(path));
             filePathNode.appendChild(filePathText);
             filesNode.appendChild(filePathNode);
 
             //<md5></md5>
-            QDomNode fileMD5Node = d.pDocument_->createElement("md5");
-            QDomText fileMD5Text = d.pDocument_->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
+            QDomNode fileMD5Node = d.pDocument->createElement("md5");
+            QDomText fileMD5Text = d.pDocument->createTextNode(QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5).toHex());
             fileMD5Node.appendChild(fileMD5Text);
             filesNode.appendChild(fileMD5Node);
 
             //<lastModify></lastModify>
-            QDomNode fileLastModifyNode = d.pDocument_->createElement("lastModify");
-            QDomText fileLastModifyText = d.pDocument_->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
+            QDomNode fileLastModifyNode = d.pDocument->createElement("lastModify");
+            QDomText fileLastModifyText = d.pDocument->createTextNode(QFileInfo(path).lastModified().toString("yyyy-MM-dd,hh:mm"));
             fileLastModifyNode.appendChild(fileLastModifyText);
             filesNode.appendChild(fileLastModifyNode);
         }

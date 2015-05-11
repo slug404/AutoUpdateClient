@@ -4,7 +4,7 @@
 class VersionCreater;
 class VersionCreaterPrivate: public VersionBasePrivate
 {
-    DPTR_DECLARE_PUBLIC(VersionCreater);
+    DPTR_DECLARE_PUBLIC(VersionCreater)
     QDomNode *pFilesNode_;
     QDomNode *pIpAddressNode_;
 };

@@ -11,7 +11,7 @@ VersionBase::VersionBase(VersionBasePrivate &data)
     : DPTR_INIT(&data)
 {
     DPTR_D(VersionBase);
-    d.pMap_nodeName_domNode_ = new QMap<QString, QDomNode *>();
+    d.pMap_nodeName_domNode = new QMap<QString, QDomNode *>();
 }
 
 VersionBase::~VersionBase()
@@ -37,12 +37,12 @@ bool VersionBase::saveXml(const QString &filePath)
     out.setCodec("UTF-8");
 
     DPTR_D(VersionBase);
-    if(NULL == d.pDocument_)
+    if(NULL == d.pDocument)
     {
         qDebug() << "pDocument_ is null!";
         return false;
     }
-    d.pDocument_->save(out, 4);
+    d.pDocument->save(out, 4);
 
     file.close();
     return true;

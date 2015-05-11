@@ -11,7 +11,7 @@ class QDomDocument;
 
 class XmlComparePrivate : public UpdateComparePrivate
 {
-    DPTR_DECLARE_PUBLIC(XmlCompare);
+    DPTR_DECLARE_PUBLIC(XmlCompare)
 
 public:
     explicit XmlComparePrivate()

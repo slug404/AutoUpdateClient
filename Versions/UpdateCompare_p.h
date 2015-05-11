@@ -8,7 +8,7 @@ class UpdateCompare;
 
 class UpdateComparePrivate: public DPtrPrivate<UpdateCompare>
 {
-    DPTR_DECLARE_PUBLIC(UpdateCompare);
+    DPTR_DECLARE_PUBLIC(UpdateCompare)
 
 public:
     QString clientVersion_;

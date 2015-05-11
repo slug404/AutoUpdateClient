@@ -2,7 +2,9 @@
 #define VERSIONCREATER_H
 
 #include "VersionBase.h"
+
 #include <QMap>
+
 #include "dptr.h"
 
 class VersionCreaterPrivate;
@@ -11,7 +13,7 @@ class QHostAddress;
 class VersionCreater : public VersionBase
 {
     Q_OBJECT
-    DPTR_DECLARE_PRIVATE(VersionCreater);
+    DPTR_DECLARE_PRIVATE(VersionCreater)
 public:
     VersionCreater();
     virtual ~VersionCreater();

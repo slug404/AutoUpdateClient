@@ -18,7 +18,7 @@ struct UpdateFileInformation
 class XmlCompare : public UpdateCompare
 {
     Q_OBJECT
-    DPTR_DECLARE_PRIVATE(XmlCompare);
+    DPTR_DECLARE_PRIVATE(XmlCompare)
 public:
     explicit XmlCompare();
     virtual ~XmlCompare();

@@ -3,6 +3,7 @@
 
 #include "DownloadBase.h"
 #include <QTcpSocket>
+
 #include "dptr.h"
 #include "Versions/XmlCompare.h"
 
@@ -54,11 +55,11 @@ private:
     void handleExecutable(QDataStream &in);
     void getXml();
     void getData();
-    void getUpdateFilesData(QList<UpdateFileInformation> list);
+    void getUpdateFilesData(const QList<UpdateFileInformation> &list);
     void getExecutable();
 
 private:
-    DPTR_DECLARE_PRIVATE(TcpDownload);
+    DPTR_DECLARE_PRIVATE(TcpDownload)
     qint32 blockSize_;
     QMap<QString, QString> map_name_file_;
 };

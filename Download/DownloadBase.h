@@ -6,10 +6,13 @@
 
 class DownloadBasePrivate;
 
+/**
+ * @brief The DownloadBase class 下载接口 TODO: HttpDownload
+ */
 class DownloadBase : public QObject
 {
     Q_OBJECT
-    DPTR_DECLARE_PRIVATE(DownloadBase);
+    DPTR_DECLARE_PRIVATE(DownloadBase)
 public:
     virtual ~DownloadBase();
     void start();

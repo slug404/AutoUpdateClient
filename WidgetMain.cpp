@@ -105,7 +105,6 @@ void WidgetMain::slotDownloadFinish(const QString &name)
 
     QSettings setting("./resource/setting.ini", QSettings::IniFormat);
     setting.setValue("Normal/update", true);
-    //qApp->exit(4);
     this->close();
 }
 
@@ -115,17 +114,17 @@ void WidgetMain::slotServerInfoDone(const QString &str)
     qDebug() << "start scan local files";
     /////////////////////////////////////////////////
     /// \brief 发布时注释
-//    ////
-//    {
-//        QFile file("server.xml");
-//        if(!file.open(QFile::WriteOnly))
-//        {
-//            qDebug() << "server.xml can't open! ";
-//        }
-//        file.write(strServerVersionInfo_.toUtf8());
-//        file.waitForBytesWritten(1000);
-//        file.close();
-//    }
+    //    ////
+    //    {
+    //        QFile file("server.xml");
+    //        if(!file.open(QFile::WriteOnly))
+    //        {
+    //            qDebug() << "server.xml can't open! ";
+    //        }
+    //        file.write(strServerVersionInfo_.toUtf8());
+    //        file.waitForBytesWritten(1000);
+    //        file.close();
+    //    }
     /////////////////////////////////////////////////////
 
     XmlCompare compare;
@@ -262,12 +261,12 @@ void WidgetMain::initData()
         qDebug() << "don't need to update file, and start Mind+";
     }
 #ifdef Q_OS_WIN32
-	startMind("./mp.exe");
+    startMind("./mp.exe");
 #elif defined(Q_OS_LINUX)
-	startMind("./mp");
+    startMind("./mp");
 #elif defined(Q_OS_MAC)
-	QProcess::execute("chmod +x ./mp.app/Contents/MacOS/mp");
-	startMind("./mp.app");
+    QProcess::execute("chmod +x ./mp.app/Contents/MacOS/mp");
+    startMind("./mp.app");
 #endif
     //检查本地版本以及服务器版本.
 
@@ -295,16 +294,16 @@ void WidgetMain::initData()
     strLocalVersionInfo_ = versionCreater.getXml();
     //qDebug() << strLocalVersionInfo_;
 
-//    {
-//        QFile fileTemp("./client.xml");
-//        if(!fileTemp.open(QFile::WriteOnly))
-//        {
-//            //qdebug() << "open fail 1234";
-//        }
+    //    {
+    //        QFile fileTemp("./client.xml");
+    //        if(!fileTemp.open(QFile::WriteOnly))
+    //        {
+    //            //qdebug() << "open fail 1234";
+    //        }
 
-//        fileTemp.write(strLocalVersionInfo_.toAscii());
-//        fileTemp.close();
-//    }
+    //        fileTemp.write(strLocalVersionInfo_.toAscii());
+    //        fileTemp.close();
+    //    }
     //qDebug() << "strLocalVersionInfo_ done";
     //map_name_path_ = versionCreater.getFilePath();
     /////////////////////////////////////////////////////////////////////////////
@@ -406,13 +405,9 @@ void WidgetMain::moveTempFileToWorkPath(QMap<QString, QString> &map_name_path)
 
 void WidgetMain::startMind(const QString &path)
 {
-#ifdef Q_OS_MAC
     if(!QFile::exists(path))
-#else
-    if(!QFile::exists(path))
-#endif
     {
-		int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find mp in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
+        int result = QMessageBox::warning(this, tr("warnning"), tr("Failed to find mp in current directory. Could you manually select a directory?"), QMessageBox::Yes, QMessageBox::No);
         if(QMessageBox::Yes == result)
         {
             QString pathNow = QFileDialog::getOpenFileName(this, tr(""), tr("."));

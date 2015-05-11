@@ -13,15 +13,15 @@ class VersionBasePrivate : public DPtrPrivate<VersionBase>
     DPTR_DECLARE_PUBLIC(VersionBase)
 public:
     VersionBasePrivate()
-        : pUpdateNode_(NULL)
-        , pDocument_(NULL)
-        , pMap_nodeName_domNode_(NULL)
+        : pUpdateNode(NULL)
+        , pDocument(NULL)
+        , pMap_nodeName_domNode(NULL)
     {
 
     }
-    QDomNode *pUpdateNode_;
-    QDomDocument  *pDocument_;
-    QMap<QString, QDomNode *> *pMap_nodeName_domNode_;
+    QDomNode *pUpdateNode;
+    QDomDocument  *pDocument;
+    QMap<QString, QDomNode *> *pMap_nodeName_domNode;
 };
 
 #endif // VERSIONBASE_P_H
